@@ -1,0 +1,106 @@
+{
+  "report_id": "87f966e2-46a5-450d-98c0-59c0bdb4d5e1",
+  "timestamp": "2026-03-17T21:22:15.614244+00:00",
+  "scan_type": "github",
+  "source": "https://github.com/pallets/flask",
+  "scanned_files": 10,
+  "total_violations": 1,
+  "critical": 1,
+  "medium": 0,
+  "low": 0,
+  "violations": [
+    {
+      "rule_id": "OPA_HARDCODED_SECRET",
+      "severity": "critical",
+      "message": "Hardcoded secret detected",
+      "line_number": 1,
+      "code_snippet": "",
+      "source": "opa-fallback",
+      "file_path": "docs/conf.py"
+    }
+  ],
+  "file_breakdown": [
+    {
+      "file_path": "docs/conf.py",
+      "language": "python",
+      "total_violations": 1,
+      "critical": 1,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/celery/make_celery.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/celery/src/task_app/__init__.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/celery/src/task_app/tasks.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/celery/src/task_app/views.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/javascript/js_example/__init__.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/javascript/js_example/views.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/javascript/tests/conftest.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/javascript/tests/test_js_example.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/tutorial/flaskr/__init__.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    }
+  ],
+  "ai_summary": "Scanned 10 files, found 1 violations.\n\n# Security Audit Summary\n\n## Executive Summary\nThe static analysis of the codebase has revealed critical vulnerabilities that pose significant risks to application security. The most pressing issue identified is the presence of hardcoded secrets, which can lead to unauthorized access and data breaches. Immediate remediation is necessary to safeguard the integrity of the application.\n\n## Critical Issues\n- **OPA_HARDCODED_SECRET**: Hardcoded secret detected (line 1)\n\n## Medium Issues\n- None identified.\n\n## Low Issues\n- None identified.\n\n## Recommended Actions\n1. **Remove Hardcoded Secrets**: Replace the hardcoded secret with a secure method of storing sensitive information, such as environment variables or a secrets management tool.\n2. **Implement Code Review Process**: Establish a code review process to ensure that hardcoded secrets and other security vulnerabilities are identified and addressed before code is merged.\n3. **Conduct Regular Security Audits**: Schedule regular security audits and static analysis scans to proactively identify and mitigate potential vulnerabilities in the codebase.\n4. **Educate Development Team**: Provide training for the development team on secure coding practices, emphasizing the risks associated with hardcoded secrets and how to avoid them.",
+  "scan_duration_ms": 49082
+}

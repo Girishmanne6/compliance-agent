@@ -1,0 +1,11 @@
+{
+  "report_id": "d2f41824-3ef8-4d17-95ca-74a1ab803254",
+  "timestamp": "2026-03-11T08:32:26.265070+00:00",
+  "total_violations": 0,
+  "critical": 0,
+  "medium": 0,
+  "low": 0,
+  "violations": [],
+  "ai_summary": "## Executive Summary\nNo violations were detected in the submitted code. The scan did not surface immediate security or compliance issues.\n\n## Critical Issues\nNone.\n\n## Medium Issues\nNone.\n\n## Low Issues\nNone.\n\n## Recommended Actions\n1. Keep Semgrep rules and OPA policies up to date.\n2. Re-scan changes in CI before deployment.",
+  "scan_duration_ms": 3407
+}

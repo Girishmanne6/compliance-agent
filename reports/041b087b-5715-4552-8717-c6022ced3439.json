@@ -1,0 +1,106 @@
+{
+  "report_id": "041b087b-5715-4552-8717-c6022ced3439",
+  "timestamp": "2026-03-17T21:05:39.817710+00:00",
+  "scan_type": "github",
+  "source": "https://github.com/pallets/flask",
+  "scanned_files": 10,
+  "total_violations": 1,
+  "critical": 1,
+  "medium": 0,
+  "low": 0,
+  "violations": [
+    {
+      "rule_id": "OPA_HARDCODED_SECRET",
+      "severity": "critical",
+      "message": "Hardcoded secret detected",
+      "line_number": 1,
+      "code_snippet": "",
+      "source": "opa-fallback",
+      "file_path": "docs/conf.py"
+    }
+  ],
+  "file_breakdown": [
+    {
+      "file_path": "docs/conf.py",
+      "language": "python",
+      "total_violations": 1,
+      "critical": 1,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/celery/make_celery.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/celery/src/task_app/__init__.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/celery/src/task_app/tasks.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/celery/src/task_app/views.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/javascript/js_example/__init__.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/javascript/js_example/views.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/javascript/tests/conftest.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/javascript/tests/test_js_example.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    },
+    {
+      "file_path": "examples/tutorial/flaskr/__init__.py",
+      "language": "python",
+      "total_violations": 0,
+      "critical": 0,
+      "medium": 0,
+      "low": 0
+    }
+  ],
+  "ai_summary": "Scanned 10 files, found 1 violations.\n\n## Executive Summary\nThe scan detected 1 total violations across application code and policy checks. Critical findings: 1, medium findings: 0, low findings: 0.\n\n## Critical Issues\n- OPA_HARDCODED_SECRET: Hardcoded secret detected (line 1)\n\n## Medium Issues\n- None.\n\n## Low Issues\n- None.\n\n## Recommended Actions\n1. Remove hardcoded secrets and replace them with environment-managed secrets.\n2. Eliminate dangerous dynamic execution and unsafe deserialization patterns.\n3. Tighten Terraform network and IAM policies, and enforce encryption defaults.\n4. Re-run the compliance scan in CI after fixes to confirm closure.",
+  "scan_duration_ms": 43143
+}

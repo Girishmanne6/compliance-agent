@@ -1,0 +1,24 @@
+{
+  "report_id": "680263af-5ef5-4bbb-83ee-d29e07c04885",
+  "timestamp": "2026-03-17T21:20:15.975692+00:00",
+  "scan_type": "paste",
+  "source": "pasted-code",
+  "scanned_files": 1,
+  "total_violations": 1,
+  "critical": 1,
+  "medium": 0,
+  "low": 0,
+  "violations": [
+    {
+      "rule_id": "OPA_EVAL",
+      "severity": "critical",
+      "message": "Use of eval() is a security risk",
+      "line_number": 28,
+      "code_snippet": "    return eval(compile(node, \"<safe_eval>\", \"eval\"), {\"__builtins__\": {}}, {})",
+      "source": "opa-fallback"
+    }
+  ],
+  "file_breakdown": [],
+  "ai_summary": "# Security Audit Summary\n\n## Executive Summary\nThe static analysis of the codebase has identified critical security vulnerabilities that require immediate attention. The use of the `eval()` function poses a significant risk, as it can lead to code injection attacks and compromise the integrity of the application. Prompt remediation of this issue is essential to ensure the security of the system.\n\n## Critical Issues\n- **Use of eval()**: The use of `eval()` on line 28 is a critical security risk and must be addressed immediately to prevent potential code injection vulnerabilities.\n\n## Medium Issues\n- None identified at this time.\n\n## Low Issues\n- None identified at this time.\n\n## Recommended Actions\n1. **Remove or Refactor**: Eliminate the use of `eval()` on line 28. Consider refactoring the code to use safer alternatives, such as JSON parsing or other appropriate methods that do not execute arbitrary code.\n2. **Code Review**: Conduct a thorough code review to identify any other potential security vulnerabilities and ensure best practices are being followed.\n3. **Security Training**: Provide security training for developers to raise awareness about common security risks and secure coding practices.\n4. **Regular Audits**: Implement a schedule for regular security audits and static analysis to catch vulnerabilities early in the development process.",
+  "scan_duration_ms": 9397
+}

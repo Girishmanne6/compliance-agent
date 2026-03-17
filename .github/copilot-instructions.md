@@ -1,0 +1,18 @@
+- [x] Verify that the copilot-instructions.md file in the .github directory is created.
+- [x] Clarify Project Requirements
+- [x] Scaffold the Project
+- [x] Customize the Project
+- [x] Install Required Extensions
+- [x] Compile the Project
+- [x] Create and Run Task
+- [x] Launch the Project
+- [x] Ensure Documentation is Complete
+
+- Requirement summary: FastAPI backend, Semgrep scanning, OPA policy checks, AI audit summaries, JSON and HTML reporting, static frontend, sample vulnerable code, Render deployment config.
+- Scaffold summary: Project created manually because automated setup returned a checklist instead of concrete files.
+- Customization summary: Backend pipeline, dark DevSecOps dashboard, sample loading, saved reports, and deployment files were added.
+- Extensions summary: No extension installation was required.
+- Compile summary: Diagnostics were clean, Python sources compiled with python3, dependencies installed in .venv, and the API was exercised successfully.
+- Task summary: No VS Code task was required for the requested deliverable, so this step was intentionally skipped after review.
+- Launch summary: The FastAPI app was launched with uvicorn in the local virtual environment and validated through live HTTP requests.
+- Documentation summary: README and deployment details were added and aligned with the implementation.

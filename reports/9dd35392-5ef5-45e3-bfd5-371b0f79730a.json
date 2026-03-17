@@ -1,0 +1,44 @@
+{
+  "report_id": "9dd35392-5ef5-45e3-bfd5-371b0f79730a",
+  "timestamp": "2026-03-11T08:27:39.547074+00:00",
+  "total_violations": 4,
+  "critical": 4,
+  "medium": 0,
+  "low": 0,
+  "violations": [
+    {
+      "rule_id": "OPA_HARDCODED_PASSWORD",
+      "severity": "critical",
+      "message": "Hardcoded password detected",
+      "line_number": 3,
+      "code_snippet": "password = \"admin123\"",
+      "source": "opa-fallback"
+    },
+    {
+      "rule_id": "OPA_HARDCODED_SECRET",
+      "severity": "critical",
+      "message": "Hardcoded secret detected",
+      "line_number": 4,
+      "code_snippet": "api_key = \"sk-abc123xyz\"",
+      "source": "opa-fallback"
+    },
+    {
+      "rule_id": "OPA_EVAL",
+      "severity": "critical",
+      "message": "Use of eval() is a security risk",
+      "line_number": 13,
+      "code_snippet": "    return eval(expression)",
+      "source": "opa-fallback"
+    },
+    {
+      "rule_id": "OPA_PICKLE",
+      "severity": "critical",
+      "message": "Unsafe deserialization with pickle detected",
+      "line_number": 17,
+      "code_snippet": "    return pickle.loads(blob)",
+      "source": "opa-fallback"
+    }
+  ],
+  "ai_summary": "## Executive Summary\nThe scan detected 4 total violations across application code and policy checks. Critical findings: 4, medium findings: 0, low findings: 0.\n\n## Critical Issues\n- OPA_HARDCODED_PASSWORD: Hardcoded password detected (line 3)\n- OPA_HARDCODED_SECRET: Hardcoded secret detected (line 4)\n- OPA_EVAL: Use of eval() is a security risk (line 13)\n- OPA_PICKLE: Unsafe deserialization with pickle detected (line 17)\n\n## Medium Issues\n- None.\n\n## Low Issues\n- None.\n\n## Recommended Actions\n1. Remove hardcoded secrets and replace them with environment-managed secrets.\n2. Eliminate dangerous dynamic execution and unsafe deserialization patterns.\n3. Tighten Terraform network and IAM policies, and enforce encryption defaults.\n4. Re-run the compliance scan in CI after fixes to confirm closure.",
+  "scan_duration_ms": 7635
+}
