@@ -3,3 +3,8 @@
 __pycache__/
 *.pyc
 reports/
+stats.json
+compliance_agent.db
+htmlcov/
+.coverage
+.pytest_cache/

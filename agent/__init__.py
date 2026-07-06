@@ -6,4 +6,5 @@ __all__ = [
     "summarizer",
     "reporter",
     "github_scanner",
+    "metrics",
 ]

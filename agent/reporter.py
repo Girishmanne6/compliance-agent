@@ -8,6 +8,13 @@ from uuid import uuid4
 
 import markdown
 
+from agent.database import (
+    init_db,
+    list_report_summaries,
+    load_report_row,
+    save_report_row,
+)
+
 REPORTS_DIR = Path(__file__).resolve().parent.parent / "reports"
 
 
@@ -31,6 +38,7 @@ def build_report(
     source: str = "pasted-code",
     scanned_files: int = 1,
     file_breakdown: list[dict[str, Any]] | None = None,
+    step_timings: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     ordered_violations = sorted(
         violations,
@@ -55,6 +63,7 @@ def build_report(
         "file_breakdown": file_breakdown or [],
         "ai_summary": ai_summary,
         "scan_duration_ms": scan_duration_ms,
+        "step_timings_ms": step_timings or {},
     }
 
 
@@ -210,19 +219,16 @@ def _render_html(report: dict[str, Any]) -> str:
 def save_report(report: dict[str, Any]) -> dict[str, str]:
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     report_id = report["report_id"]
-    json_path = REPORTS_DIR / f"{report_id}.json"
     html_path = REPORTS_DIR / f"{report_id}.html"
 
-    json_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    init_db()
+    save_report_row(report)
     html_path.write_text(_render_html(report), encoding="utf-8")
-    return {"json_path": str(json_path), "html_path": str(html_path)}
+    return {"html_path": str(html_path)}
 
 
 def load_report(report_id: str) -> dict[str, Any]:
-    json_path = REPORTS_DIR / f"{report_id}.json"
-    if not json_path.exists():
-        raise FileNotFoundError(report_id)
-    return json.loads(json_path.read_text(encoding="utf-8"))
+    return load_report_row(report_id)
 
 
 def get_html_report_path(report_id: str) -> Path:
@@ -233,27 +239,4 @@ def get_html_report_path(report_id: str) -> Path:
 
 
 def list_recent_reports(limit: int = 10) -> list[dict[str, Any]]:
-    if not REPORTS_DIR.exists():
-        return []
-
-    records: list[dict[str, Any]] = []
-    for json_path in REPORTS_DIR.glob("*.json"):
-        try:
-            payload = json.loads(json_path.read_text(encoding="utf-8"))
-        except Exception:
-            continue
-        records.append(
-            {
-                "report_id": payload.get("report_id", json_path.stem),
-                "timestamp": payload.get("timestamp", ""),
-                "total_violations": payload.get("total_violations", 0),
-                "critical": payload.get("critical", 0),
-                "medium": payload.get("medium", 0),
-                "low": payload.get("low", 0),
-                "scan_type": payload.get("scan_type", "paste"),
-                "source": payload.get("source", "pasted-code"),
-            }
-        )
-
-    records.sort(key=lambda item: item.get("timestamp", ""), reverse=True)
-    return records[:limit]
+    return list_report_summaries(limit)

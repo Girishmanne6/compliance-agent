@@ -164,7 +164,7 @@ async function loadSample() {
   const sampleMap = {
     python: '/sample_code/vulnerable.py',
     terraform: '/sample_code/infra.tf',
-    javascript: '/sample_code/vulnerable.py',
+    javascript: '/sample_code/vulnerable.js',
   };
 
   const response = await fetch(sampleMap[language] || sampleMap.python);

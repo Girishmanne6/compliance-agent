@@ -1,21 +1,28 @@
 from __future__ import annotations
 
 import base64
+import logging
 import os
 import re
 from typing import Any
 
 import requests
 
+logger = logging.getLogger(__name__)
+
 GITHUB_API = "https://api.github.com"
+DEFAULT_MAX_REPO_FILES = int(os.getenv("MAX_REPO_FILES", "25"))
+PRIORITY_PREFIXES = ("sample_code/", "src/", "app/", "lib/", "api/", "agent/")
 EXTENSION_TO_LANGUAGE = {
     ".py": "python",
     ".tf": "terraform",
+    ".js": "javascript",
 }
 LANGUAGE_EXTENSIONS = {
     "python": {".py"},
     "terraform": {".tf"},
-    "all": {".py", ".tf"},
+    "javascript": {".js"},
+    "all": {".py", ".tf", ".js"},
 }
 
 
@@ -60,6 +67,8 @@ def _github_get(url: str) -> requests.Response:
         response = requests.get(url, headers=_build_headers(), timeout=15)
     except requests.RequestException as exc:
         raise GitHubScannerError(f"GitHub request failed: {exc}") from exc
+    if response.status_code == 403 and "rate limit" in response.text.lower():
+        raise GitHubScannerError("GitHub API rate limit exceeded. Set GITHUB_TOKEN or retry later.")
     return response
 
 
@@ -111,11 +120,35 @@ def _fetch_file_content(owner: str, repo: str, path: str) -> str:
 def _allowed_extensions(language_filter: str) -> set[str]:
     normalized = language_filter.strip().lower()
     if normalized not in LANGUAGE_EXTENSIONS:
-        raise GitHubScannerError("language must be one of: python, terraform, all")
+        raise GitHubScannerError("language must be one of: python, terraform, javascript, all")
     return LANGUAGE_EXTENSIONS[normalized]
 
 
-def fetch_repo_files(repo_url: str, language_filter: str, max_files: int = 10) -> list[dict[str, str]]:
+def _priority_key(path: str) -> tuple[int, int, str]:
+    """Prefer shallow paths and known source directories."""
+    depth = path.count("/")
+    in_priority = any(path.startswith(prefix) for prefix in PRIORITY_PREFIXES)
+    return (0 if in_priority else 1, depth, path)
+
+
+def _select_candidates(candidates: list[dict[str, str]], max_files: int) -> tuple[list[dict[str, str]], bool]:
+    candidates.sort(key=lambda item: _priority_key(item["path"]))
+    truncated = len(candidates) > max_files
+    if truncated:
+        logger.warning(
+            "Repo scan truncated: %d candidate files, scanning first %d by priority.",
+            len(candidates),
+            max_files,
+        )
+    return candidates[:max_files], truncated
+
+
+def fetch_repo_files(
+    repo_url: str,
+    language_filter: str,
+    max_files: int | None = None,
+) -> dict[str, Any]:
+    limit = max_files if max_files is not None else DEFAULT_MAX_REPO_FILES
     owner, repo = _parse_repo_url(repo_url)
     allowed_extensions = _allowed_extensions(language_filter)
 
@@ -137,7 +170,7 @@ def fetch_repo_files(repo_url: str, language_filter: str, max_files: int = 10) -
             continue
         candidates.append({"path": path, "language": language})
 
-    selected = candidates[:max_files]
+    selected, truncated = _select_candidates(candidates, limit)
     files: list[dict[str, str]] = []
     for item in selected:
         content = _fetch_file_content(owner, repo, item["path"])
@@ -148,4 +181,10 @@ def fetch_repo_files(repo_url: str, language_filter: str, max_files: int = 10) -
                 "content": content,
             }
         )
-    return files
+    return {
+        "files": files,
+        "total_candidates": len(candidates),
+        "scanned_files": len(files),
+        "truncated": truncated,
+        "max_files": limit,
+    }

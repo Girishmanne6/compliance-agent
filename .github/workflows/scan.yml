@@ -1,0 +1,98 @@
+name: Compliance Scan
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "**/*.py"
+      - "**/*.tf"
+      - "**/*.js"
+      - "agent/**"
+      - "policies/**"
+      - "scripts/**"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  compliance-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run compliance scan on changed files
+        id: scan
+        run: |
+          python scripts/ci_scan.py \
+            --base "origin/${{ github.base_ref }}" \
+            --output-json scan-results.json \
+            --output-markdown scan-comment.md
+        continue-on-error: true
+
+      - name: Annotate violations
+        if: always() && steps.scan.outcome == 'failure'
+        run: |
+          python - <<'PY'
+          import json, os
+          data = json.load(open("scan-results.json"))
+          for v in data.get("violations", []):
+              if v.get("severity") == "critical":
+                  file = v.get("file_path", "unknown")
+                  line = v.get("line_number", 1)
+                  msg = v.get("message", "Critical violation")
+                  print(f"::error file={file},line={line}::{msg}")
+          PY
+
+      - name: Post PR comment
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const comment = fs.readFileSync('scan-comment.md', 'utf8');
+            const passed = '${{ steps.scan.outcome }}' === 'success';
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const marker = '<!-- compliance-agent-scan -->';
+            const body = `${marker}\n${comment}`;
+            const existing = comments.find(c => c.body && c.body.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Fail on critical violations
+        if: steps.scan.outcome == 'failure'
+        run: |
+          echo "Critical violations found — blocking merge."
+          exit 1
