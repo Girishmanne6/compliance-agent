@@ -2,6 +2,40 @@
 
 Compliance Agent is an AI-driven shift-left compliance tool that scans source code and Infrastructure-as-Code before deployment, so security and policy problems are caught earlier in the delivery lifecycle.
 
+## Screenshots
+
+### Dashboard
+
+Dark DevSecOps UI with paste-code scanning, violation stats, and AI audit summary.
+
+![Compliance Agent dashboard home](docs/screenshots/dashboard-home.png)
+
+Scan results showing 4 critical violations detected via OPA policy checks:
+
+![Scan results with violations and AI summary](docs/screenshots/dashboard-scan-results.png)
+
+GitHub repo scan mode — paste a repo URL and scan Python, Terraform, or JavaScript files:
+
+![GitHub repo scan mode](docs/screenshots/dashboard-github-scan-mode.png)
+
+### CI compliance gate blocking a PR (live demo)
+
+GitHub Actions detects critical violations and fails the check — merge is blocked.
+
+![Compliance Scan workflow failure with line-level annotations](docs/screenshots/ci-gate-actions-run-failed.png)
+
+### PR checks — failed compliance scan
+
+![PR checks tab showing failed Compliance Scan workflow](docs/screenshots/ci-gate-pr-checks-failed.png)
+
+### Automated violation summary on the PR
+
+The workflow posts a comment with severity, rule ID, file, line, and message for each finding.
+
+![GitHub Actions bot comment with violation table](docs/screenshots/ci-gate-pr-comment-violations.png)
+
+Live demo PR: [#1 — verify CI compliance gate blocks critical violations](https://github.com/Girishmanne6/compliance-agent/pull/1)
+
 ## What Shift-Left Means
 
 Shift-left means moving security and compliance checks closer to where code is written and reviewed instead of waiting for a late-stage audit or production incident. In practice, that means developers, platform engineers, and security teams can identify secrets, insecure code paths, and risky Terraform settings before they become release blockers.
@@ -35,6 +69,8 @@ compliance-agent/
 ├── sample_code/
 ├── scripts/
 │   └── ci_scan.py            # CI scanner for changed files
+├── docs/
+│   └── screenshots/          # README screenshots (CI gate demo)
 ├── tests/                    # 80 tests, 87% coverage
 ├── app.py
 ├── render.yaml
